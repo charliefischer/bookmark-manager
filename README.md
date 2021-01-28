@@ -10,6 +10,12 @@ So that I can quickly go to web sites I regularly visit
 I would like to see a list of bookmarks
 ```
 
+```
+As a time-pressed user
+So I can remove websites I'm no longer interested in
+I would like to delete bookmarks from the table
+```
+
 ## Domain Model
 
 ![Bookmark Manager domain model](./public/images/bookmark_manager_1.png)

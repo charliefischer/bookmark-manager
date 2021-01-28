@@ -31,4 +31,19 @@ describe Bookmark do
       expect(bookmark.title).to include 'Twitter Website'
     end
   end
+
+  describe '.delete' do
+    it "deletes an existing bookmark" do
+      connection = PG.connect(dbname: 'bookmark_manager_test')
+      connection.exec("TRUNCATE bookmarks;")
+      bookmark = Bookmark.create(title: 'Twitter Title', url: 'twitter.com')
+
+      Bookmark.delete(title: bookmark.title)
+
+      expect(Bookmark.all.length).to eq 0
+
+    end
+
+  end
+
 end
