@@ -3,8 +3,9 @@ require './lib/bookmark'
 
 class BookmarkManager < Sinatra::Base
 
+	set :method_override, true
+
 	get '/' do
-		erb(:index)
 		redirect '/bookmarks'
 	end
 
@@ -38,10 +39,14 @@ class BookmarkManager < Sinatra::Base
 
 	patch '/bookmarks/:id' do
 	  connection = PG.connect(dbname: 'bookmark_manager_test')
-	  connection.exec("UPDATE bookmarks SET url = '#{params[:url]}', title = '#{params[:title]}' WHERE id = '#{params[:id]}'")
+	  connection.exec("UPDATE bookmarks SET url = '#{params[:url]}', title = '#{params[:title]}' WHERE id = '#{params[:id]}';")
 
 	  redirect('/bookmarks')
 	end
+
+	# post '/bookmarks/:id' do
+	# 	redirect('/bookmarks')
+	# end
 
 	# post '/bookmarks/find' do
 	# 	Bookmark.find(title: params[:title])
