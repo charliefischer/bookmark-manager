@@ -1,10 +1,20 @@
 <h1>Bookmark Manager</h1>
+<button onclick="location.href='/bookmarks/new'" type='button' >
+  Add Bookmark
+</button>
+<button onclick="location.href='/bookmarks/delete'" type='button'>
+  Delete Bookmark
+</button>
+
 <ul>
   <% @bookmarks.each do |bookmark| %>
   <li>
       <a href="<%= bookmark.url %>">
         <%= bookmark.title %>
       </a>
+      <form action="/bookmarks/<%= bookmark.id %>/edit" method = "get">
+        <input type="submit" value="Edit">
+      </form>
     </li>
   <% end %>
 </ul>

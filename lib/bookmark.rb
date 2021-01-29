@@ -36,7 +36,6 @@ attr_reader :id, :title, :url
   end
 
   def self.delete(title:)
-
     if ENV['ENVIRONMENT'] == 'test'
       connection = PG.connect(dbname: 'bookmark_manager_test')
     else
@@ -44,7 +43,29 @@ attr_reader :id, :title, :url
     end
 
     connection.exec("DELETE FROM bookmarks WHERE title = '#{title}';")
-
   end
+
+  def self.update(id:, url:, title:)
+    if ENV['ENVIRONEMTN'] == 'test'
+      connection = PG.connect(dbname: 'bookmark_manager_test')
+    else
+      connection = PG.connect(dbname: 'bookmark_manager')
+    end
+    result = connection.exec("UPDATE bookmarks SET url = '#{url}', title = '#{title}' WHERE id = #{id} RETURNING id, url, title;")
+    p result[0]
+
+    Bookmark.new(id: result[0]['id'], title: result[0]['title'], url: result[0]['url'])
+  end
+
+  # def self.find(title:)
+  #   if ENV['ENVIRONMENT'] == 'test'
+  #     connection = PG.connect(dbname: 'bookmark_manager_test')
+  #   else
+  #     connection = PG.connect(dbname: 'bookmark_manager')
+  #   end
+  #
+  # end
+
+
 
 end
