@@ -18,6 +18,14 @@ describe Bookmark do
       expect(bookmarks.first.title).to eq 'Makers Website'
       expect(bookmarks.first.url).to eq 'http://www.makersacademy.com'
     end
+
+    it 'does not create a new bookmark if the URL is not valid' do
+      connection = PG.connect(dbname: 'bookmark_manager_test')
+      connection.exec("TRUNCATE bookmarks;")
+      
+      Bookmark.create(url: 'not a real bookmark', title: 'not a real bookmark')
+      expect(Bookmark.all).to be_empty
+    end
   end
 
   describe '.create' do
@@ -36,10 +44,9 @@ describe Bookmark do
     it "deletes an existing bookmark" do
       connection = PG.connect(dbname: 'bookmark_manager_test')
       connection.exec("TRUNCATE bookmarks;")
-      bookmark = Bookmark.create(title: 'Twitter Title', url: 'twitter.com')
 
+      bookmark = Bookmark.create(title: 'Twitter Title', url: 'http://www.twitter.com')
       Bookmark.delete(title: bookmark.title)
-
       expect(Bookmark.all.length).to eq 0
     end
   end
@@ -54,6 +61,17 @@ describe Bookmark do
       expect(updated_bookmark.title).to eq 'Snakers Academy'
       expect(updated_bookmark.url).to eq 'http://www.snakersacademy.com'
     end
-end
+  end
 
+  describe '.find' do
+    it 'returns the requested bookmark object' do
+      bookmark = Bookmark.create(title: 'Find Me', url: 'http://lostandfound.com')
+      result = Bookmark.find(id: bookmark.id)
+
+      expect(result).to be_a Bookmark
+      expect(result.id).to eq bookmark.id
+      expect(result.title).to eq 'Find Me'
+      expect(result.url).to eq 'http://lostandfound.com'
+    end
+  end
 end
